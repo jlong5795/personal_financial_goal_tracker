@@ -48,12 +48,13 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String         @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?        @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
+    bankAccounts  BankAccounts[]
     sessions      Session[]
 }
 
@@ -63,4 +64,32 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model BankAccounts {
+    id          String     @id @default(cuid())
+    accountName String
+    accountType String
+    balance     Balances[]
+    user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId      String
+    Goals       Goals[]
+}
+
+model Balances {
+    id            String       @id @default(cuid())
+    amount        Float
+    bankAccount   BankAccounts @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+    bankAccountId String
+    date          DateTime
+}
+
+model Goals {
+    id            String       @id @default(cuid())
+    bankAccountId String
+    description   String
+    startDate     DateTime
+    targetDate    DateTime
+    targetAmount  Float
+    bankAccount   BankAccounts @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
 }
