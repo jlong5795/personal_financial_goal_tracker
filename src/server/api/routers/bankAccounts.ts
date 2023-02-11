@@ -4,7 +4,11 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const bankAccountsRouter = createTRPCRouter({
     getAll: protectedProcedure.query(({ ctx }) => {
-        return ctx.prisma.bankAccounts.findMany();
+        return ctx.prisma.bankAccounts.findMany({
+            where: {
+                userId: ctx.session.user.id,
+            }
+        });
     }),
 
     getOne: protectedProcedure.input(

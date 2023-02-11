@@ -9,7 +9,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-
         <div>
           This is a placeholder
         </div>
